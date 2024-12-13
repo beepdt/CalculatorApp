@@ -28,6 +28,7 @@ fun CalculatorScreen(viewModel: CalculatorViewModel){
 
     val calculatorData = viewModel.calculatorData.value
 
+
     val buttons = listOf(
         listOf("C","(",")","/"),
         listOf("7","8","9","+"),
@@ -63,7 +64,7 @@ fun CalculatorScreen(viewModel: CalculatorViewModel){
                     Text(overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
                         fontSize = 24.sp,
-                        text = inputText,
+                        text = calculatorData.equation,
                         modifier = Modifier.align(Alignment.BottomEnd))
                 }
 
@@ -79,7 +80,7 @@ fun CalculatorScreen(viewModel: CalculatorViewModel){
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         fontSize = 32.sp,
-                        text = finalResult,
+                        text = calculatorData.result.toString(),
                         modifier = Modifier.align(Alignment.BottomEnd))
                 }
 
