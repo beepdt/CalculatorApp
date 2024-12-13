@@ -5,11 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 
 class CalculatorViewModel: ViewModel() {
-    private val _finalResult = mutableStateOf(CalculatorData())
-    val finalResult:State<Double> get() = mutableStateOf(_finalResult.value.result)
+    private val _calculatorData = mutableStateOf(CalculatorData())
 
-    private val _inputText = mutableStateOf("")
-    val inputText: State<String> = _inputText
+    val calculatorData:State<CalculatorData> get() = _calculatorData
+
 
 
 
@@ -17,32 +16,26 @@ class CalculatorViewModel: ViewModel() {
 
     fun onButtonClick(button: String) {
 
-        _inputText.value.let {
-            if (button == "AC") {
-                _inputText.value = ""
-                _finalResult.value.result = 0.0
-                return
+        val equation = _calculatorData.value.equation
+
+        when (button) {
+            "AC" -> {
+                _calculatorData.value = _calculatorData.value.copy(equation = "", result = 0.0)
             }
-
-            if (button == "="){
-                _finalResult.value.result = calculateResult()
-
+            "=" -> {
+                val result = calculateResult()
+                _calculatorData.value = _calculatorData.value.copy(result = result)
             }
-
-            if (button == "C") {
-
-                if (_inputText.value.isNotEmpty()) {
-                    _inputText.value = _inputText.value.substring(0, _inputText.value.length - 1)
-                    return
+            "C" -> {
+                val updatedEquation = if (equation.isNotEmpty()) {
+                    equation.substring(0, equation.length - 1)
                 } else {
-                    _inputText.value = ""
-                    return
+                    ""
                 }
+                _calculatorData.value = _calculatorData.value.copy(equation = updatedEquation)
             }
-
-            else {
-                _inputText.value = _inputText.value + button
-                return
+            else -> {
+                _calculatorData.value = _calculatorData.value.copy(equation = equation + button)
             }
         }
     }
@@ -51,31 +44,31 @@ class CalculatorViewModel: ViewModel() {
     private fun calculateResult():Double{
 
         try {
-            val inputText = _inputText.value
+            val inputText = _calculatorData.value.equation
 
             when {
                 inputText.contains("+") -> {
 
                     val numbers = inputText.split("+").map { it.trim().toDouble() }
                     val sum = numbers.sum()
-                    _finalResult.value.result = sum
+                    _calculatorData.value.result = sum
                 }
 
                 inputText.contains("-")->{
                     val numbers = inputText.split("-").map { it.trim().toDouble() }
                     val difference = numbers.reduce{acc, d -> acc - d }
-                    _finalResult.value.result = difference
+                    _calculatorData.value.result = difference
 
                 }
                 else -> {
-                    _finalResult.value.result = 0.0
+                    _calculatorData.value.result = 0.0
                 }
             }
         } catch (e: Exception){
-            _finalResult.value.result = 0.0
+            _calculatorData.value.result = 0.0
         }
 
-        return _finalResult.value.result
+        return _calculatorData.value.result
     }
 
 
@@ -89,6 +82,6 @@ class CalculatorViewModel: ViewModel() {
         val sum = values.sum()
         //_finalResult.value gives the current state. Default state is 0.0.
         //_finalResult.value.copy(result = .....) changes the value of just result parameter keeping other values same
-        _finalResult.value = _finalResult.value.copy(result = _finalResult.value.result + sum)
+        _calculatorData.value = _calculatorData.value.copy(result = _calculatorData.value.result + sum)
     }
 }

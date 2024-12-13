@@ -26,8 +26,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun CalculatorScreen(viewModel: CalculatorViewModel){
 
-    val inputText = viewModel.inputText.value
-    val finalResult = viewModel.finalResult.value.toString()
+    val calculatorData = viewModel.calculatorData.value
 
     val buttons = listOf(
         listOf("C","(",")","/"),
