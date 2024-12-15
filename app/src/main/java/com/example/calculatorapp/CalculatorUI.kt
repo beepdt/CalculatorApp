@@ -1,5 +1,6 @@
 package com.example.calculatorapp
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,9 +14,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,7 +45,13 @@ fun CalculatorScreen(viewModel: CalculatorViewModel){
     Scaffold(
 
         topBar = {
-            TopAppBar(title = { Text(text = "calculator.", fontWeight = FontWeight.Bold) })
+            TopAppBar(
+                colors = topAppBarColors(
+                    containerColor = Color.Transparent,
+                    titleContentColor = Color.White
+                ),
+                title = { Text(text = "calculator.", fontWeight = FontWeight.Bold) }
+            )
         },
 
         content = {
@@ -49,6 +60,11 @@ fun CalculatorScreen(viewModel: CalculatorViewModel){
             Column(
                 //verticalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
+                    .background(brush = Brush.linearGradient(
+                    colors = listOf(Color(0xff434343),Color(0xff000000)),
+                    start = Offset(0f, 0f), // Top-left corner
+                    end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
+                ))
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
@@ -63,6 +79,7 @@ fun CalculatorScreen(viewModel: CalculatorViewModel){
                 ){
                     Text(overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
+                        color = Color.White,
                         fontSize = 24.sp,
                         text = calculatorData.equation,
                         modifier = Modifier.align(Alignment.BottomEnd))
@@ -78,6 +95,7 @@ fun CalculatorScreen(viewModel: CalculatorViewModel){
                 ){
                     Text(
                         maxLines = 1,
+                        color = Color.White,
                         overflow = TextOverflow.Ellipsis,
                         fontSize = 32.sp,
                         text = calculatorData.result.toString(),
@@ -88,7 +106,14 @@ fun CalculatorScreen(viewModel: CalculatorViewModel){
 
                 //number grid
 
-                Column(modifier = Modifier.padding(16.dp)){
+                Column(modifier = Modifier
+                    .padding(0.dp)
+                    .background(brush = Brush.linearGradient(
+                        colors = listOf(Color(0xff434343),Color(0xff000000)),
+                        start = Offset(0f, 0f), // Top-left corner
+                        end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
+                    ))
+                ){
                     buttons.forEach{
                             row ->
                         Row(modifier = Modifier.fillMaxWidth()){
@@ -102,7 +127,7 @@ fun CalculatorScreen(viewModel: CalculatorViewModel){
                                         .clickable{viewModel.onButtonClick(label)},
                                     contentAlignment = Alignment.Center
                                 ){
-                                    Text(text = label, fontSize = 24.sp)
+                                    Text(text = label, fontSize = 24.sp, color = Color.White)
                                 }
                             }
                         }
