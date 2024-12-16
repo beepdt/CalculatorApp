@@ -49,6 +49,13 @@ fun CalculatorScreen(viewModel: CalculatorViewModel){
 
     val calculatorData = viewModel.calculatorData.value
 
+    val inputEquation = when {
+        calculatorData.equation.endsWith(".0") -> {
+            calculatorData.equation.replace(".0","")
+        }
+        else -> {calculatorData.equation}
+    }
+
     val calculateResult = when {
         calculatorData.result.toString().endsWith(".0") -> {
             calculatorData.result.toString().replace(".0","")
@@ -118,7 +125,7 @@ fun CalculatorScreen(viewModel: CalculatorViewModel){
                         color = Color.LightGray,
                         fontWeight = FontWeight.Bold,
                         fontSize = 25.sp,
-                        text = calculatorData.equation,
+                        text = inputEquation,
                         modifier = Modifier.align(Alignment.BottomEnd))
                 }
 
