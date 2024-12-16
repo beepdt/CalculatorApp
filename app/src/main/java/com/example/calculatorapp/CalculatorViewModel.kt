@@ -74,27 +74,32 @@ class CalculatorViewModel: ViewModel() {
 
     private fun tokenize(input: String): List<String> {
         val tokens = mutableListOf<String>()
-        val regex = Regex("""\d+(\.\d+)?|[+\-x÷()]""")
-        val matches = regex.findAll(input)
+        val regex = Regex("""\d+(\.\d+)?|[+\-x÷()]""") // Match numbers, operators, and parentheses
+        val matches = regex.findAll(input).toList()
 
-        for ((index, match) in matches.withIndex()) {
-            val token = match.value
+        var index = 0
+        while (index < matches.size) {
+            val token = matches[index].value
 
-            // Handle negative numbers
-            if (token == "-" && (index == 0 || tokens.lastOrNull() in listOf("(", "+", "-", "x", "÷"))) {
-                // If "-" is at the start or after an operator/parenthesis, it's a negative number
-                val nextMatch = matches.elementAtOrNull(index + 1)
-                if (nextMatch != null && nextMatch.value.matches(Regex("""\d+(\.\d+)?"""))) {
-                    tokens.add(token + nextMatch.value) // Combine "-" with the next number
+            // Check if "-" is a negative sign
+            if (token == "-" && (index == 0 || matches[index - 1].value in listOf("(", "+", "-", "x", "÷"))) {
+                if (index + 1 < matches.size && matches[index + 1].value.matches(Regex("""\d+(\.\d+)?"""))) {
+                    // Combine "-" with the next number
+                    tokens.add(token + matches[index + 1].value)
+                    index += 2 // Skip the next token since it's already combined
                     continue
                 }
             }
 
+            // Otherwise, add the token as is
             tokens.add(token)
+            index++
         }
 
         return tokens
     }
+
+
 
 
     private fun convertToRPN(tokens: List<String>): List<String> {
@@ -152,17 +157,17 @@ class CalculatorViewModel: ViewModel() {
 
         for (token in rpn) {
             when {
-                token.matches(Regex("""\d+(\.\d+)?""")) -> {
-                    // If it's a number, push onto the stack
+                token.matches(Regex("""-?\d+(\.\d+)?""")) -> {
+                    // Push numbers (including negatives) onto the stack
                     stack.add(token.toDouble())
                 }
                 token in listOf("+", "-", "x", "÷") -> {
-                    // If it's an operator, pop two values, apply the operator, and push the result
-                    if (stack.size < 2) {
-                        throw IllegalArgumentException("Invalid RPN expression")
-                    }
+                    // Operators: Pop two values and apply the operator
+                    if (stack.size < 2) throw IllegalArgumentException("Invalid RPN expression")
+
                     val b = stack.removeLast()
                     val a = stack.removeLast()
+
                     val result = when (token) {
                         "+" -> a + b
                         "-" -> a - b
@@ -173,17 +178,16 @@ class CalculatorViewModel: ViewModel() {
                         }
                         else -> throw IllegalArgumentException("Unsupported operator: $token")
                     }
-                    stack.add(result) // Use `add()` to push the result onto the stack
+                    stack.add(result)
                 }
             }
         }
 
-        if (stack.size != 1) {
-            throw IllegalArgumentException("Invalid RPN expression")
-        }
+        if (stack.size != 1) throw IllegalArgumentException("Invalid RPN expression")
 
-        return stack.last() // The final result is the last item on the stack
+        return stack.last() // Return the final result
     }
+
 
 
 
