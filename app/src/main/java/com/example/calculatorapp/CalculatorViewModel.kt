@@ -1,6 +1,5 @@
 package com.example.calculatorapp
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -55,6 +54,7 @@ class CalculatorViewModel: ViewModel() {
     private fun calculateResult():Double{
 
         return try {
+
             val inputText = _calculatorData.value.equation
 
             when {

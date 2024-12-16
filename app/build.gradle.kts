@@ -50,9 +50,12 @@ android {
 }
 
 dependencies {
+
     val lifecycle_version = "2.8.7"
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.30.1")
+
 
     implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
