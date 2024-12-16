@@ -188,14 +188,4 @@ class CalculatorViewModel: ViewModel() {
         return stack.last() // Return the final result
     }
 
-
-
-
-
-
-
-
-
-
-
 }
